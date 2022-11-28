@@ -182,7 +182,6 @@ def getNameEmojiMessage():
             }
         )
     message["emojis"] = emojis_list
-    print(message["emojis"])
     return message
 
 # Simple Version
