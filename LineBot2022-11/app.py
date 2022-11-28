@@ -52,7 +52,7 @@ def index():
                     payload["messages"] = [getTaipei101ImageMessage(),
                                            getTaipei101LocationMessage(),
                                            getMRTVideoMessage()]
-                elif text == "quoda":
+                elif text == "quota":
                     payload["messages"] = [
                             {
                                 "type": "text",
@@ -164,13 +164,60 @@ def sendTextMessageToMe():
     pushMessage({})
     return 'OK'
 
-
+# Good Version
 def getNameEmojiMessage():
     lookUpStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
     productId = "5ac21a8c040ab15980c9b43f"
     name = "Jazz"
     message = dict()
+    message["type"] = "text"
+    message["text"] = "".join("$" for r in range(len(name)))
+    emojis_list = list()
+    for i, nChar in enumerate(name):
+        emojis_list.append(
+            {
+              "index": i,
+              "productId": productId,
+              "emojiId": f"{lookUpStr.index(nChar) + 1 :03}"
+            }
+        )
+    message["emojis"] = emojis_list
+    print(message["emojis"])
     return message
+
+# Simple Version
+# def getNameEmojiMessage():
+#     lookUpStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+#     productId = "5ac21a8c040ab15980c9b43f"
+#     name ={
+#     "type": "text",
+#     "text": "$$$$",
+#     "emojis": [
+#       {
+#         "index": 0,
+#         "productId": "5ac21a8c040ab15980c9b43f",
+#         "emojiId": "010"
+#       },
+#       {
+#         "index": 1,
+#         "productId": "5ac21a8c040ab15980c9b43f",
+#         "emojiId": "001"
+#       },
+#       {
+#         "index": 2,
+#         "productId": "5ac21a8c040ab15980c9b43f",
+#         "emojiId": "026"
+#       },
+#       {
+#         "index": 3,
+#         "productId": "5ac21a8c040ab15980c9b43f",
+#         "emojiId": "026"
+#       }
+#     ]
+# }
+#
+#     message = dict(name)
+#     return message
 
 
 def getCarouselMessage(data):
@@ -235,8 +282,8 @@ def pushMessage(payload):
 
 
 def getTotalSentMessageCount():
-    response = {}
-    return 0
+    response = requests.get('https://api.line.me/v2/bot/message/quota/consumption', headers=HEADER)
+    return response.text
 
 
 def getTodayCovid19Message():
